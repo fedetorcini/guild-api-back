@@ -241,3 +241,25 @@ exports.updateGameRating = async (gameId) => {
   }
 };
 
+// Maintenance endpoint to recalculate ratings and review counts for all games.
+// Uses the same logic as updateGameRating, iterating over every Game document.
+exports.recalculateAllGameRatings = async (req, res) => {
+  try {
+    const games = await Game.find();
+
+    for (const game of games) {
+      await exports.updateGameRating(game._id);
+    }
+
+    res.json({
+      message: 'Game ratings and review counts recalculated successfully',
+      count: games.length
+    });
+  } catch (error) {
+    console.error('Error recalculating game ratings:', error);
+    res.status(500).json({
+      error: 'Error recalculating game ratings'
+    });
+  }
+};
+

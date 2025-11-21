@@ -17,5 +17,9 @@ router.get('/:id', gameController.getGameById);
 // POST /games - Create game
 router.post('/', gameController.createGame);
 
+// POST /games/recalculate-ratings - Recalculate ratingValue and reviewsCount for all games
+// This is intended as an admin/maintenance endpoint.
+router.post('/recalculate-ratings', gameController.recalculateAllGameRatings);
+
 module.exports = router;
 
