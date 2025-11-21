@@ -36,6 +36,38 @@ exports.getAllGames = async (req, res) => {
   }
 };
 
+// Get most popular games sorted by rating (and reviews count as tiebreaker)
+exports.getPopularGames = async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 20;
+
+    const games = await Game.find()
+      .sort({ ratingValue: -1, reviewsCount: -1, createdAt: -1 })
+      .limit(limit);
+
+    const formattedGames = games.map(game => ({
+      id: game._id.toString(),
+      title: game.title,
+      description: game.description,
+      images: game.images,
+      ratingValue: game.ratingValue,
+      reviewsCount: game.reviewsCount,
+      releaseDate: game.releaseDate,
+      developerPublisher: game.developerPublisher,
+      platforms: game.platforms,
+      genres: game.genres,
+      createdAt: game.createdAt.toISOString(),
+      updatedAt: game.updatedAt.toISOString()
+    }));
+
+    res.json(formattedGames);
+  } catch (error) {
+    res.status(400).json({
+      error: 'Error fetching popular games'
+    });
+  }
+};
+
 // Get game by ID
 exports.getGameById = async (req, res) => {
   try {

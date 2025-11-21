@@ -5,6 +5,9 @@ const gameController = require('../controllers/gameController');
 // GET /games - Get all games
 router.get('/', gameController.getAllGames);
 
+// GET /games/popular - Get most popular games (sorted by rating)
+router.get('/popular', gameController.getPopularGames);
+
 // GET /games/search - Search games
 router.get('/search', gameController.searchGames);
 
