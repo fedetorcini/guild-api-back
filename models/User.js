@@ -71,5 +71,19 @@ userSchema.methods.toJSON = function() {
   return obj;
 };
 
+// --- PERFIL PUBLICO ---
+userSchema.methods.toPublicProfile = function (isFollowing = false) {
+  return {
+    id: this._id,
+    username: this.username,
+
+    followersCount: this.followers?.length || 0,
+    followingCount: this.following?.length || 0,
+
+    isFollowing, // opcional
+  };
+};
+
+
 module.exports = mongoose.model('User', userSchema);
 

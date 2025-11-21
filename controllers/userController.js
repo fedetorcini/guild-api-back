@@ -84,15 +84,16 @@ exports.updateCurrentUser = async (req, res) => {
 // Get user by ID
 exports.getUserById = async (req, res) => {
   try {
-    const { id } = req.params;
+    const targetId = req.params.id;
+    const currentUserId = req.user?.id;
 
-    if (!id) {
+    if (!targetId) {
       return res.status(400).json({
         error: 'User ID is required'
       });
     }
 
-    const user = await User.findById(id);
+    const user = await User.findById(targetId);
 
     if (!user) {
       return res.status(404).json({
@@ -100,7 +101,13 @@ exports.getUserById = async (req, res) => {
       });
     }
 
-    res.json(user.toJSON());
+    let isFollowing = false;
+
+    if (currentUserId) {
+      isFollowing = user.followers.includes(currentUserId);
+    }
+
+    res.json(user.toPublicProfile(isFollowing));
   } catch (error) {
     res.status(500).json({
       error: 'Error fetching user'
