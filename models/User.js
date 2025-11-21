@@ -37,7 +37,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     trim: true,
     default: null
-  }
+  },
+  followers: [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
+  following: [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }]
 }, {
   timestamps: true
 });
@@ -62,6 +64,9 @@ userSchema.methods.toJSON = function() {
   obj.id = obj._id.toString();
   delete obj._id;
   delete obj.__v;
+
+  //obj.followersCount = obj.followers?.length || 0;
+  //obj.followingCount = obj.following?.length || 0;
   return obj;
 };
 
